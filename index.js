@@ -16,15 +16,24 @@ app.listen(3050,()=>{
 const mongoose = require('mongoose')
 //configurar o script de conexão
 const conexao = ()=>{
-    mongoose.connect('mongodb+srv://userRevisao:gffc1608@gabonito.th4xf.mongodb.net/?retryWrites=true&w=majority')
+    mongoose.connect('mongodb+srv://userRevisao:gffc1608@gabonito.th4xf.mongodb.net/revisao?retryWrites=true&w=majority')
 }
-
+//configurar o modelo par a coleção alunos
+const modelo = new mongoose.Schema({
+    nome:String,
+    turma:String,
+    disciplina:String
+})
+//definir o modelo para coleção alunos
+const alunos = mongoose.model('alunos',modelo)
 /*configurações do banco de dados - fim*/
 
 /*rota para requisição/*/
-app.get('/',(req,res)=>{
+app.get('/',async(req,res)=>{
     conexao()
+    //pesquisar os documentos na colection alunos
+    const resultado = await alunos.find()
+    console.log(resultado)
     //res.send('Funcionado')
-    res.render('index.ejs',{nome:"Gabonito Gadelicia", 
-    turma:"2EMIA", disciplina:"LP2" })
+    res.render('index.ejs',{resultado })
 })
